@@ -1,0 +1,87 @@
+program defis;
+{$UNITPATH \SDL2}
+uses SDL2, SDL2_image;
+
+var
+  sdlWindow1: PSDL_Window;
+  sdlRenderer: PSDL_Renderer;
+  sdlSurface1: PSDL_Surface;
+  sdlTexture1: PSDL_Texture;
+  sdlTexture2: PSDL_Texture;
+  sdlHelico: TSDL_Rect;
+  sdlframe: TSDL_Rect;
+  exit: BOOLEAN = false; 
+  
+
+begin
+  //initilization of video subsystem
+  if SDL_Init(SDL_INIT_VIDEO) < 0 then Halt;
+
+
+    // full set up
+    sdlWindow1 := SDL_CreateWindow('Window1', 50, 50, 500, 500, SDL_WINDOW_SHOWN);
+    if sdlWindow1 = nil then Halt;
+
+    sdlRenderer := SDL_CreateRenderer(sdlWindow1, 1, SDL_RENDERER_ACCELERATED);
+    if(sdlRenderer=nil) then halt;
+
+    //creer une surface … partir d'un fichier
+    sdlSurface1:= SDL_LoadBMP('rider.bmp');
+    if sdlSurface1 = nil then
+        halt;
+
+    //creer une texture … partir d'une surface
+    sdlTexture1 := SDL_CreateTextureFromSurface(sdlRenderer, sdlSurface1);
+    if sdlTexture1 = nil then
+        halt;
+
+
+    //render texture
+    if SDL_RenderCopy(sdlRenderer, sdlTexture1, nil, nil) <> 0 then
+        halt;
+
+    // affichage helico
+
+    sdlTexture2 := IMG_LoadTexture( sdlRenderer, 'helicopter.png' );
+    if sdlTexture2 = nil then HALT;
+
+    //preparer rectangle
+    sdlHelico.x := 0;
+    sdlHelico.y := 0;
+    sdlHelico.w := 128;
+    sdlHelico.h := 55;
+    sdlframe.x := 0;
+    sdlframe.y := 0;
+    sdlframe.w := 128;
+    sdlframe.h := 55;
+
+   	while exit = false do 
+   	begin 
+   		sdlframe.x:= sdlframe.x+128;
+   		if sdlframe.x > 512 then 
+   		begin 
+   		sdlframe.x:=0;
+   		end;
+   	
+   	 //render texture
+    if SDL_RenderCopy(sdlRenderer, sdlTexture1, nil, nil) <> 0 then
+      halt;
+   	SDL_RenderCopy(sdlRenderer, sdlTexture2, @sdlframe,  @sdlHelico);
+   	
+
+      // render to window for 5 seconds
+      SDL_RenderPresent(sdlRenderer);
+      SDL_Delay(50000);
+      end;
+      
+      // clear memory
+      SDL_DestroyTexture(sdlTexture2);
+      SDL_DestroyTexture(sdlTexture1);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+      SDL_FreeSurface(sdlSurface1);
+      SDL_DestroyRenderer(sdlRenderer);
+      SDL_DestroyWindow (sdlWindow1);
+
+      //Closing SDL2
+      SDL_Quit;
+
+end.

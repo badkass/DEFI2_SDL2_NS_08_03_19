@@ -1,0 +1,76 @@
+program defis;
+
+uses SDL2, SDL2_image;
+
+var
+  sdlWindow1: PSDL_Window;
+  sdlRenderer: PSDL_Renderer;
+  sdlSurface1: PSDL_Surface;
+  sdlTexture1: PSDL_Texture;
+  sdlSurface2: PSDL_Surface;
+  sdlTexture2: PSDL_Texture;
+  sdlRectangle: TSDL_Rect;
+
+begin
+  //initilization of video subsystem
+  if SDL_Init(SDL_INIT_VIDEO) < 0 then Halt;
+
+
+    // full set up
+    sdlWindow1 := SDL_CreateWindow('Window1', 50, 50, 500, 500, SDL_WINDOW_SHOWN);
+    if sdlWindow1 = nil then Halt;
+
+    sdlRenderer := SDL_CreateRenderer(sdlWindow1, 1, SDL_RENDERER_ACCELERATED);
+    if(sdlRenderer=nil) then halt;
+
+    //creer une surface … partir d'un fichier
+    sdlSurface1:= SDL_LoadBMP('rider.bmp');
+    if sdlSurface1 = nil then
+        halt;
+
+    //creer une texture … partir d'une surface
+    sdlTexture1 := SDL_CreateTextureFromSurface(sdlRenderer, sdlSurface1);
+    if sdlTexture1 = nil then
+        halt;
+
+
+    //render texture
+    if SDL_RenderCopy(sdlRenderer, sdlTexture1, nil, nil) <> 0 then
+        halt;
+
+    // affichage h‚lico
+
+    sdlTexture2 := IMG_LoadTexture( sdlRenderer, 'helicopter.png' );
+    if sdlTexture2 = nil then HALT;
+
+    sdlTexture2 := SDL_CreateTextureFromSurface(sdlRenderer, sdlSurface2);
+    if sdlTexture2 = nil then
+        halt;
+
+    //pr‚parer rectangle
+    sdlRectangle.x := 0;
+    sdlRectangle.y := 0;
+    sdlRectangle.w := 128;
+    sdlRectangle.h := 55;
+
+    //render texture
+   if SDL_RenderCopy(sdlRenderer, sdlTexture1, nil, nil) <> 0 then
+      halt;
+   SDL_RenderCopy(sdlRenderer, sdlTexture2, @sdlRectangle, nil);
+   SDL_RenderCopy(sdlRenderer, sdlTexture2, nil,  @sdlRectangle);
+
+      // render to window for 5 seconds
+      SDL_RenderPresent(sdlRenderer);
+      SDL_Delay(5000);
+
+      // clear memory
+      SDL_DestroyTexture(sdlTexture2);
+      SDL_DestroyTexture(sdlTexture1);
+      SDL_FreeSurface(sdlSurface1);
+      SDL_DestroyRenderer(sdlRenderer);
+      SDL_DestroyWindow (sdlWindow1);
+
+      //Closing SDL2
+      SDL_Quit;
+
+end.
